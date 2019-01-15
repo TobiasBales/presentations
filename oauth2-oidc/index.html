@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OAuth2 and OpenID Connect</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# OAuth 2 and OpenID Connect
+
+---
+
+# Agenda
+--
+
+1. What is OAuth 2?
+--
+
+2. What is OpenID Connect?
+
+--
+3. OAuth 2 + OpenID Connect @ Jimdo
+
+---
+# What is OAuth 2?
+
+--
+
+### Problem:
+I want to access someones mail contacts
+
+--
+
+### Soltion:
+Ask the user for their email username and password
+
+--
+
+### Correct solution:
+Find a standard for accessing third party data and services
+
+---
+# What are we looking for?
+
+--
+
+- we want to ask a thrid party (e.g. Google) for access to a restricted resource (e.g. your contacts)
+
+--
+
+- has to be transparent to the user
+
+--
+
+- has to be secure
+
+---
+# How does it look like?
+
+.center.middle![Accessing Google apis](./images/choose_account.png)
+
+---
+# Terminology
+
+--
+
+### Authorization Server
+
+Component that is used for authorization, e.g. https://accounts.google.com
+
+--
+
+### Resource Server
+
+Component that we want to access, e.g. Google contacts API
+
+--
+
+### Access Token
+
+Short lived token that is used to authenticate with resources
+
+--
+
+### Refresh Token
+
+Longer lived token that can be used to obtain a new access token
+
+---
+
+# High level flow
+
+--
+
+- Talk to Authorization Server to establish identity and obtain credentials
+
+--
+
+- Use those credentials to access the private resource
+
+---
+
+# Real world flows
+
+--
+
+- Authorization code flow
+
+--
+
+- Implicit flow
+
+--
+
+- Password flow
+
+- Client credentials flow
+
+- Device code flow
+
+---
+
+# Authorization code flow
+
+--
+
+![Code flow](./images/code_flow.svg)
+
+---
+
+# Implicit flow
+
+--
+
+![Implicit flow](./images/implicit_flow.svg)
+
+---
+
+# How does this solve authorization?
+
+--
+
+Part of the flow contain a list of permissions (scopes)
+
+--
+
+Those scopes are displayed when the user grants permission
+
+--
+
+The access and refresh token are only valid to access resources that fall into the scope
+
+---
+
+# Is this enough?
+
+--
+
+No
+
+--
+
+OAuth was built for authorization 
+
+--
+
+Was being used for authorization and authentication
+
+---
+
+# OpenID Connect
+
+--
+
+Built to work in tandem with OAuth 2
+
+--
+
+Exposes an endpoint to get information about the subject (user)
+
+--
+
+The endpoint is part of the Resource Server and provides information about the user
+
+--
+
+This solves the missing authentication problem
+
+---
+
+# OAuth 2 and OpenID Connect @ Jimdo
+
+--
+
+- Authorization server: User-Account-Service, contains OIDC subject endpoint
+
+--
+
+- Resource servers: Any service that accepts an access token and returns data to the relevant user
+
+--
+
+### Caveats:
+
+--
+
+- We do not use the scopes provided by OAuth 2
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
