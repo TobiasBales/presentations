@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>OAuth2 and OpenID Connect</title>
+    <title>OAuth</title>
     <meta charset="utf-8">
     <style>
       @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
@@ -14,108 +14,149 @@
         font-weight: normal;
       }
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      .centered-image {
+        display: block;
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: 90%;
+      }
+
+      p img {
+        max-width: 100%;
+        display: inline-block;
+      }
+
+      .gray {
+        color: gray;
+      }
+
+      blockquote {
+        background: #eee;
+        border-radius: 4px;
+        padding: 16px;
+      }
     </style>
   </head>
   <body>
     <textarea id="source">
 
 class: center, middle
-
-# OAuth 2 and OpenID Connect
+# OAuth(2)
 
 ---
-
 # Agenda
---
-
-1. What is OAuth 2?
---
-
-2. What is OpenID Connect?
 
 --
-3. OAuth 2 + OpenID Connect @ Jimdo
+
+1. What is OAuth?
+
+--
+
+2. Why do we need it?
+
+--
+
+3. How does it work?
+
+--
+
+4. What is OIDC?
+--
+
+5. Usage at Jimdo
 
 ---
-# What is OAuth 2?
+# What is OAuth?
 
 --
 
-### Problem:
-I want to access someones mail contacts
+<blockquote>OAuth is an open standard for access delegation </blockquote>
+<cite>Wikipedia</cite>
 
 --
 
-### Soltion:
-Ask the user for their email username and password
-
---
-
-### Correct solution:
-Find a standard for accessing third party data and services
+<br/><br/><br/>
+A standard for handling authorization to restricted, non local resources.
 
 ---
-# What are we looking for?
+class: center, middle
+
+# Why do we need it?
+
+---
+
+.centered-image[![Early stage yelp](./images/yelp.png)]
+
+---
+# Goals
 
 --
 
-- we want to ask a thrid party (e.g. Google) for access to a restricted resource (e.g. your contacts)
+- ability to access a thrid party's (e.g. Google) restricted resource (e.g. your contacts)
 
 --
 
-- has to be transparent to the user
+- has to be transparent to the user (who gets access and to what)
 
 --
 
 - has to be secure
 
----
-# How does it look like?
 
-.center.middle![Accessing Google apis](./images/choose_account.png)
+---
+class: center, middle
+
+#3. How does it work?
+
+---
+.centered-image[![Accessing Google apis](./images/choose_account.png)]
 
 ---
 # Terminology
 
 --
 
-### Authorization Server
-
-Component that is used for authorization, e.g. https://accounts.google.com
-
+#### Client
+Component that wants to access the restricted resource
 --
 
-### Resource Server
-
-Component that we want to access, e.g. Google contacts API
-
+#### Authorization Server
+Component that handles tokens, e.g. https://accounts.google.com
 --
 
-### Access Token
-
-Short lived token that is used to authenticate with resources
-
+#### Resource Server
+Component that owns the restricted resources, e.g. Google contacts API
 --
 
-### Refresh Token
+#### Access Token
+Short lived token that is used to access the resources
+--
 
+#### Refresh Token
 Longer lived token that can be used to obtain a new access token
-
 ---
 
 # High level flow
 
 --
 
-- Talk to Authorization Server to establish identity and obtain credentials
+- Establish identity to authorization server
 
 --
 
-- Use those credentials to access the private resource
+-  Obtain credentials from authorization server
+
+--
+
+- Use credentials to access the resources on the resource server
 
 ---
 
-# Real world flows
+# Different flows for obtaining tokens
 
 --
 
@@ -127,11 +168,11 @@ Longer lived token that can be used to obtain a new access token
 
 --
 
-- Password flow
+- .gray[Password flow]
 
-- Client credentials flow
+- .gray[Client credentials flow]
 
-- Device code flow
+- .gray[Device code flow]
 
 ---
 
@@ -171,47 +212,55 @@ The access and refresh token are only valid to access resources that fall into t
 
 --
 
-No
-
---
-
-OAuth was built for authorization 
-
---
-
-Was being used for authorization and authentication
+##No
 
 ---
 
-# OpenID Connect
+# Is this enough?
+
+- OAuth was built for authorization 
 
 --
 
-Built to work in tandem with OAuth 2
-
---
-
-Exposes an endpoint to get information about the subject (user)
-
---
-
-The endpoint is part of the Resource Server and provides information about the user
-
---
-
-This solves the missing authentication problem
+- Started being used for authentication too
 
 ---
 
-# OAuth 2 and OpenID Connect @ Jimdo
+# OpenID Connect (OIDC)
 
 --
 
-- Authorization server: User-Account-Service, contains OIDC subject endpoint
+- Built to work in tandem with OAuth 2
 
 --
 
-- Resource servers: Any service that accepts an access token and returns data to the relevant user
+- Exposes an endpoint to get information about the subject (user)
+
+--
+
+- The endpoint is part of the Resource Server
+
+--
+
+- Solves the missing authentication problem
+
+---
+
+# OAuth and OIDC @ Jimdo
+
+--
+
+- Authorization server:
+
+  - User-Account-Service
+
+--
+
+- Resource servers: 
+  - CMS Backend
+  - Dash API
+  - Statistics service
+  - bascially anything that accepts access tokens for authorization
 
 --
 
