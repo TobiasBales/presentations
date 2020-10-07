@@ -1,0 +1,48 @@
+@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+@import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+body {
+  font-family: 'Droid Serif'; 
+}
+
+h1, h2, h3 {
+  font-family: 'Yanone Kaffeesatz';
+  font-weight: normal;
+}
+
+p {
+  font-size: 20px;
+}
+
+.remark-code {
+  display: inline-block;
+}
+.remark-code, .remark-inline-code {
+  font-family: 'Ubuntu Mono'; 
+  background-color: #F2F3F4;
+  padding: 2px;
+}
+
+blockquote {
+  border-left-style: solid;
+  border-left-width: 3px;
+  border-left-color: gray;
+  background-color: #F2F3F4;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.image-50 img {
+  width: 50%;
+}
+.image-100 img {
+  width: 100%;
+}
+.image-blockquote img {
+  margin-left: 40px;
+}
+
+.highlight {
+  color: red;
+}

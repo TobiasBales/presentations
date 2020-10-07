@@ -1,33 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>An introduction to prometheus</title>
+    <title>An introduction to Prometheus</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <style type="text/css">
-      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
-      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
-      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
-
-      body { font-family: 'Droid Serif'; }
-      h1, h2, h3 {
-        font-family: 'Yanone Kaffeesatz';
-        font-weight: normal;
-      }
-      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
-      blockquote {
-        border-left-style: solid;
-        border-left-width: 3px;
-        border-left-color: gray;
-        background-color: #F2F3F4;
-        padding-left: 1em;
-        padding-right: 1em;
-      }
-      .image-50 img {
-        width: 50%;
-      }
-      .image-blockquote img {
-        margin-left: 40px;
-      }
+		<link rel="stylesheet" href="../static/index.css" >
     </style>
   </head>
   <body>
@@ -35,11 +11,11 @@
 
 class: center, middle
 
-# An introduction to prometheus
+# An introduction to Prometheus
 
 ---
 
-# So what is prometheus?
+# So what is Prometheus?
 
 --
 
@@ -49,9 +25,507 @@ class: center, middle
 
 .image-50.image-blockquote[![](./images/what.gif)]
 
-??
+---
 
-Let's break this down
+# An .highlight[open-source]
+
+--
+
+It's open source, that's good
+
+---
+
+# An open-source .highlight[monitoring system]
+
+--
+
+It is used for monitoring
+
+---
+
+# An open-source monitoring system .highlight[with a dimensional data model]
+
+--
+
+This is going to be a bit more complicated
+
+---
+
+# Multidimensional data model
+
+--
+
+Measuring the number of http requests
+
+
+`http_requests 0`
+
+--
+
+Add a couple of http requests
+
+`GET / HTTP/1.1`  
+`GET / HTTP/1.1`  
+`GET / HTTP/1.1`
+
+--
+
+Results in
+
+`http_requests 3`
+
+---
+
+# Multidimensional data model
+
+Tracking response status
+
+`GET / HTTP/1.1`  -> `HTTP/1.1 200 OK`  
+`GET / HTTP/1.1`  -> `HTTP/1.1 200 OK`  
+`GET / HTTP/1.1`  -> `HTTP/1.1 429 Too Many Requests`  
+
+--
+
+Results in
+
+`http_requests{code="200"} 2`  
+`http_requests{code="429"} 1`
+
+--
+
+But it is called .highlight[multidimensional] data model
+
+---
+
+# Multidimensional data model
+
+
+Tracking request method and response status code
+
+`GET / HTTP/1.1`  -> `HTTP/1.1 200 OK`  
+`GET / HTTP/1.1`  -> `HTTP/1.1 200 OK`  
+`POST / HTTP/1.1`  -> `HTTP/1.1 405 Method Not Allowed`  
+`PUT / HTTP/1.1`  -> `HTTP/1.1 405 Method Not Allowed`  
+`GET / HTTP/1.1`  -> `HTTP/1.1 429 Too Many Requests`  
+
+--
+
+Results in
+
+`http_requests{method="GET", code="200"} 2`  
+`http_requests{method="GET", code="429"} 1`  
+`http_requests{method="POST", code="405"} 1`  
+`http_requests{method="PUT", code="405"} 1`
+
+---
+
+# An open-source monitoring system with a dimensional data model, .highlight[flexible query langue]
+
+---
+
+# Querying data
+
+Given
+
+`http_requests{method="GET", code="200"} 2`  
+`http_requests{method="GET", code="429"} 1`  
+`http_requests{method="POST", code="405"} 1`  
+`http_requests{method="PUT", code="405"} 1`
+
+--
+
+All requests that resulted in a response status of 200
+
+`http_requests{code="200"}`
+
+--
+
+Results in
+
+`{method="GET", code="200"} 2`
+
+---
+
+# Querying data
+
+Given
+
+`http_requests{method="GET", code="200"} 2`  
+`http_requests{method="GET", code="429"} 1`  
+`http_requests{method="POST", code="405"} 1`  
+`http_requests{method="PUT", code="405"} 1`
+
+--
+
+All GET requests by code
+
+`http_requests{method="GET"}`
+
+--
+
+Results in
+
+`{method="GET", code="200"} 2`  
+`{method="GET", code="429"} 1`
+
+---
+
+# Querying data
+
+Given
+
+`http_requests{method="GET", code="200"} 2`  
+`http_requests{method="GET", code="429"} 1`  
+`http_requests{method="POST", code="405"} 1`  
+`http_requests{method="PUT", code="405"} 1`
+
+
+--
+
+All GET requests
+
+`sum(http_requests{method="GET"})`
+
+--
+
+Results in
+
+`{method="GET"} 3`  
+
+---
+
+# An open-source monitoring system with a dimensional data model, flexible query langue, .highlight[efficient time series database]
+
+--
+
+We have been looking at metrics at a single point in time
+
+--
+
+Prometheus keeps track of all metrics, including all label combinations, over time
+
+---
+
+# An open-source monitoring system with a dimensional data model, flexible query langue, efficient time series database .highlight[and modern alerting approach]
+
+---
+
+# Old school alerting
+
+--
+
+- CPU > x%
+- Disk usage > y%
+- Memory usage > z%
+
+--
+
+Very little insight into what is happening
+
+---
+
+# Modern alerting
+
+--
+
+More than 0.05% of all http requests are errors (50x status code)
+
+--
+
+`sum(http_requests{code=~"50\d"}) / sum(http_requests) > 0.0005`
+
+--
+
+Disk usage will be exceed 90% in 24 hours with linear growth
+
+--
+
+`linear_predict(disk_space_used, 60 * 60 * 24) > disk_space_total * 0.9`
+
+---
+
+# Modern alerting
+
+--
+
+## Alert manager
+
+--
+
+Part of Prometheus
+
+--
+
+Uses PromQL to define alerts
+
+--
+
+Can trigger pretty much every external service (e.g. slack, pager duty)
+
+---
+
+# Using it
+
+--
+
+Sounds cool, but how do I actually use this?
+
+---
+
+# Metric ingestion
+
+--
+
+Prometheus is a pull-based system
+
+--
+
+It asks your services for metrics
+
+--
+
+In the wonderland it asks each service once a minute
+
+---
+
+# Metric ingestion
+
+In `wonderland.yaml`
+
+```yaml
+prometheus:
+  - component: <name-of-the-component-that-exposes-metrics>
+    container-port: <port-that-exposes metrics>
+```
+
+--
+
+URL path is always `/metrics`
+
+--
+
+Port should be different from application, don't expose them to the internet
+
+---
+
+# Metric ingestion
+
+So what does your service need to respond with for this to work?
+
+--
+
+You saw it earlier already
+
+
+`http_requests{method="GET", code="200"} 2`  
+`http_requests{method="GET", code="429"} 1`  
+`http_requests{method="POST", code="405"} 1`  
+`http_requests{method="PUT", code="405"} 1`
+
+--
+
+But please use one of the available **client libraries**
+
+---
+
+# Metric types
+
+--
+
+Prometheus has 4 different types of metrics
+
+--
+
+So far we have looked at a counter
+
+--
+
+All of them serve different purposes
+
+---
+
+# Counter
+
+--
+
+A monotonically increasing value
+
+--
+
+for example
+- number of http requests served
+- tasks completed
+- errors
+
+---
+
+# Gauge
+
+--
+
+A single numerical value
+
+--
+
+Contrary to a counter it can decrease
+
+--
+
+for example
+- current temperature
+- memory usage
+- number of concurrent requests
+
+---
+
+# Histogram
+
+Samples observations and counts them into buckets
+
+--
+
+for example
+- request duration
+- response size
+
+--
+
+generated metrics for a `request_duration_seconds` histogram
+
+```
+request_duration_seconds_bucket{le="0.010"} 3
+request_duration_seconds_bucket{le="0.050"} 7
+request_duration_seconds_bucket{le="0.250"} 8
+request_duration_seconds_bucket{le="1.500"} 9
+request_duration_seconds_bucket{le="+Inf"} 10
+request_duration_seconds_sum 5592
+request_duration_seconds_count 10
+```
+
+--
+
+allows looking at quantiles of values
+
+0.5 quantile/50th percentile of request durations over the last 5 minutes
+`histogram_quantile(0.5, rate(http_request_duration_seconds_bucket[5m]))`
+
+0.95 quantile/95th percentile of request durations over the last 5 minutes
+`histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))`
+
+---
+
+# Summaries
+
+--
+
+Similar to histograms
+
+--
+
+Instead of configuring buckets by values they are configured by wanted quantiles and time windows (e.g. 0.5 and 5m)
+
+--
+
+Does not allow for ad-hoc changing of quantiles
+
+--
+
+Calculation done by service providing metrics instead of Prometheus server
+
+---
+
+# Visualizing metrics
+
+--
+
+We use grafana to visualize the metrics
+
+--
+
+.image-100[![](./images/grafana.png)]
+
+---
+
+# Best practices
+
+--
+
+When using Prometheus there are a couple of things to keep in mind
+
+--
+
+This makes your life easier
+
+--
+
+but also ours ;)
+
+---
+
+# Limit label and metric cardinality
+
+--
+
+Always consider the number of labels a metric has (metric cardinality)
+and the number of values a label can have (label cardinality)
+
+--
+
+1 label with 3 possible values means keeping track of 3 metrics
+
+--
+
+2 labels with 3 possible values each means keeping track of 9 metrics
+
+--
+
+3 labels with 3 possible values each means keeping track of 27 metrics
+
+--
+
+3 labels with 10 possible values each means keeping track of 1000 metrics
+
+---
+
+# Limit label and metric cardinality
+
+We keep track of all metrics for 30 days
+
+--
+
+One data point for each metric each minute for each service
+
+--
+
+A label cardinality of a couple thousand is the upper limit
+
+---
+
+# Naming metrics
+
+--
+
+Counts should end in `_count`
+
+--
+
+If it is not a count it should include the unit that is being measured, e.g. `request_duration_seconds`
+
+---
+
+class: center, middle
+
+# Thank you!
+
+---
+
+class: center, middle
+
+# Questions?
+
+![](./images/questions.jpeg)
+
+
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js" type="text/javascript">
