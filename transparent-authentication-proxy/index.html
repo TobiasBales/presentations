@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Transparent authentication via proxy</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<link rel="stylesheet" href="../static/index.css" >
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.8.2/mermaid.min.js" integrity="sha512-x8NWYlEsC86ngfO24tbxW6pMuyn9gYnwEW0FcSobohDc3iLCXhmRkqYXgTfE7Jwy2YCTnHRfyum8LUIiyvmgWQ==" crossorigin="anonymous"></script>
+
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Transparent authentication via proxy
+
+---
+
+# .highlight[Transparent] authentication via proxy
+
+--
+
+it happens without the application having to know about how it works
+
+---
+
+# Transparent .highlight[authentication] via proxy
+
+--
+
+it handles authentication, the who - not authorization, what one can do
+
+---
+
+# Transparent authentication .highlight[via proxy]
+
+--
+
+implemented via a proxy, does not need to be part of the application
+
+---
+
+# How do requests work?
+
+--
+
+<div class="mermaid">
+sequenceDiagram
+  participant Browser
+  participant Proxy
+  participant Service
+  Browser->>Proxy: GET /
+  Proxy->>Proxy: Is the request authenicated? yes
+  Proxy->>Service: GET /
+  Service-->>Proxy: 200 data
+  Proxy-->>Browser: 200 data
+</div>
+
+---
+
+# How do requests work?
+
+--
+
+<div class="mermaid">
+sequenceDiagram
+  participant Browser
+  participant Proxy
+  participant Service
+  participant Authentication System
+  Browser->>Proxy: GET /
+  Proxy-->>Proxy: Is the request authenicated? no
+  Proxy-->>Browser: 307 location: https://authentication-system.com/login
+  Browser->>Authentication System: GET /login
+  Authentication System-->>Authentication System: Logged in? no
+  Authentication System-->>Browser: 200 Login form
+  Browser->>Authentication System: POST /login
+  Authentication System-->>Browser: 307 https://proxy/login?continue=https://proxy
+  Browser->>Proxy: GET /
+</div>
+
+---
+
+# Jimdo specifics
+
+--
+
+**Proxy**
+
+User Account Authentication Proxy
+
+OIDC Sidecar (caches tokens, deployed with proxy)
+
+--
+
+**Authentication System**
+
+User Account Service
+
+--
+
+**Service**
+
+CMS/Dash/etc
+
+---
+
+# Jimdo specifics
+
+--
+
+Access token (short lived)
+
+--
+
+Refresh token (long lived)
+
+--
+
+Stored as cookies on the domain of the proxy
+
+---
+
+# Jimdo specifics
+
+<div class="mermaid">
+sequenceDiagram
+  participant Browser
+  participant User Account Authentication Proxy
+  participant OIDC sidecar
+  participant User Account Service
+  participant Service
+  Browser->>User Account Authentication Proxy: Request
+  User Account Authentication Proxy->>OIDC sidecar: Validate access token
+  OIDC sidecar->>User Authentication Service: Validate access token
+  OIDC sidecar->>OIDC sidecar: Caches result
+  User Account Authentication Proxy->>User Account Service: Refresh token
+  User Account Authentication Proxy->>User Account Authentication Proxy: Store tokens as cookies
+  User Account Authentication Proxy->>Service: Proxy requests
+</div>
+
+---
+
+class: center, middle
+
+# Thank you!
+
+---
+
+class: center, middle
+
+# Questions?
+
+![](../images/questions.jpeg)
+
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+        mermaid.initialize({startOnLoad:true});
+    </script>
+  </body>
+</html>
