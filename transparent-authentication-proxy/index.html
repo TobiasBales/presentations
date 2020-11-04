@@ -39,6 +39,10 @@ it handles authentication, the who - not authorization, what one can do
 
 implemented via a proxy, does not need to be part of the application
 
+--
+
+language and framework independent
+
 ---
 
 # How do requests work?
@@ -86,27 +90,7 @@ sequenceDiagram
 
 --
 
-**Proxy**
-
-User Account Authentication Proxy
-
-OIDC Sidecar (caches tokens, deployed with proxy)
-
---
-
-**Authentication System**
-
-User Account Service
-
---
-
-**Service**
-
-CMS/Dash/etc
-
----
-
-# Jimdo specifics
+OAuth 2 / OIDC based
 
 --
 
@@ -119,6 +103,32 @@ Refresh token (long lived)
 --
 
 Stored as cookies on the domain of the proxy
+
+---
+
+# Jimdo specifics
+
+--
+
+**Proxy**
+
+User Account Authentication Proxy
+
+OIDC Sidecar (caches tokens, deployed with proxy)
+
+both are deployed as sidecar containers to the service to be authenticated
+
+--
+
+**Authentication System**
+
+User Account Service
+
+--
+
+**Service**
+
+CMS/Dash/etc
 
 ---
 
