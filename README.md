@@ -1,3 +1,4 @@
 # Presentations
 
-This repository is intended to host presentations for various topics.
+[An intrduction to prometheus](./an-introduction-to-prometheus)
+[Transparent authentication via proxy](./transparent-authentication-proxy)
