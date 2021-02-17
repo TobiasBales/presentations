@@ -15,19 +15,177 @@ class: center, middle
 
 ---
 
-# Something appears
+# language
 
 --
 
-> And something more
+We are going to start by defining words so that we share a vocabulary
 
 ---
 
-# And .highlight[another slide]
+# step
 
 --
 
-Isn't that great?
+A .highlight[step] is the smallest unit of work
+
+--
+
+It can either be a defined action or a small script/command
+
+---
+
+# job
+
+--
+
+A .highlight[job] groups .highlight[multiple steps] into a larger unit
+
+--
+
+it could for example
+
+--
+
+- clone a repository
+
+--
+
+- install dependencies
+
+--
+
+- build a docker image
+
+--
+
+- push the docker image
+
+---
+
+# workflow
+
+--
+
+A .highlight[workflow] groups .highlight[multiple jobs] into a yet again larger unit
+
+--
+
+it could for example
+
+--
+
+- run tests
+
+--
+
+- run linters
+
+--
+
+- build and push a docker image
+
+--
+
+all of those steps can run at the same time or in a defined order
+
+---
+
+# secrets
+
+--
+
+A .highlight[secret] is something that is needed by worksflows but should part of the git repository
+
+--
+
+They are mostly injected as environment variables
+
+--
+
+They can be either on the scope of a repository or the whole organization
+
+---
+
+# How does this look like?
+
+--
+
+All examples can be found at 
+
+https://www.github.com/TobiasBales/github-actions-examples
+
+---
+
+# Running actions locally
+
+--
+
+You can actually do this using the `act` cli
+
+--
+
+Finally build a new pipeline without 12312378 commits
+
+---
+
+# Custom actions
+
+--
+
+You can build actions easily
+
+--
+
+They can be either private or public (which is nice)
+
+--
+
+@Jorge did so to improve slack notifications
+
+---
+
+# Slack notifications
+
+--
+
+Absolutely - there are actions for it
+
+--
+
+Thanks to @Jorge you can also have them just when a build breaks or recovers
+
+---
+
+# Obvious questions
+
+--
+
+**Can it do everything?**
+
+--
+
+No, you can build pipelines but the visualization of dependencies does not exist
+
+--
+
+**Does it do everything travis does?**
+
+--
+
+Yes, and more*
+
+--
+
+**Should I immediatelly migrate everything?**
+
+--
+
+The wonderland now uses GH actions successfully
+
+The CMS team is currently evaluating GHA with the SRE team
+
+We should have a clearer picture in 2-3 weeks, so hold off for a tad longer
 
 ---
 
