@@ -89,6 +89,10 @@ it could for example
 
 all of those steps can run at the same time or in a defined order
 
+--
+
+You can have multiple workflows with different triggers per repository
+
 ---
 
 # secrets
@@ -157,6 +161,30 @@ Thanks to @Jorge you can also have them just when a build breaks or recovers
 
 ---
 
+# Is everything great?
+
+--
+
+No, there are some issues
+
+--
+
+When you push invalid yaml/workflows they will not show up in pull requests
+
+--
+
+You can work around it by setting required checks for pull-requests
+
+--
+
+More things depend on GitHub
+
+--
+
+but if all of GitHub is down we can't clone repositories anyways
+
+---
+
 # Obvious questions
 
 --
@@ -173,7 +201,7 @@ No, you can build pipelines but the visualization of dependencies does not exist
 
 --
 
-Yes, and more*
+Yes*, and more
 
 --
 
