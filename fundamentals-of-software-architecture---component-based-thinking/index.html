@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fundamentals of Software Architecture - Component-Based Thinking</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<link rel="stylesheet" href="../static/index.css" >
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Fundamentals of Software Architecture - Component-Based Thinking
+
+---
+
+# What is a component?
+
+--
+
+> physical manifestation of a module
+
+--
+
+- jar in java
+
+--
+
+- dll in .NET
+
+--
+
+- gem in ruby
+
+--
+
+I would argue a gradle submodule would also count
+
+--
+
+- Deployable unit of work, e.g. a service or event processor
+
+--
+
+One can work without components, but it is often very useful
+
+---
+
+# An architects role
+
+--
+
+- Manage components 
+
+--
+
+- Designing classes and functions is a responsibility of engineers
+
+--
+
+- Architecture is generally separate from the process
+
+---
+
+# Architecture partitioning
+
+--
+
+- Layered architecture 
+
+--
+
+- Modular monolith
+
+---
+
+# Architecture partitioning
+
+--
+
+## Technical partitioning
+
+--
+
+- makes it easy to find code for technical concepts
+
+--
+
+- having teams of a single role, e.g. backend engineer, DBA, etc
+
+--
+
+## Domain partitioning
+
+--
+
+- makes it easy to find a domain
+
+--
+
+- having cross functional teams
+
+--
+
+- microservices are based on this style
+
+--
+
+- can have sub-components
+
+---
+
+# Component identification flow
+
+--
+
+- Identifying initial components
+
+--
+
+- Assign requirements to components
+
+--
+
+- Analyze roles and responsibilities
+
+--
+
+- Analyze architecture characteristics
+
+--
+
+- Restructure components
+
+---
+
+# Component granularity
+
+--
+
+- Too fine grained leads to too much communication
+
+--
+
+- Too coarse grained leads to high internal coupling
+
+---
+
+# Entity trap
+
+--
+
+Building an ORM instead of architecture
+
+--
+
+Naked objects, Isis etc work in this area
+
+---
+
+# Structured approaches
+
+--
+
+- Actors/actions  approach
+
+--
+
+- Event storming
+
+--
+
+- Workflow approach
+
+--
+
+If no specific requirements, actors/actions approach is solid
+
+---
+
+# Example
+
+--
+
+- Requirements can be different depending on actor in the same domain, e.g. bidder vs  auctioneer
+
+--
+
+- Can help decide architectural styles, e.g. monolith vs distributed, distributed preferable in this case
+
+---
+
+class: center, middle
+
+# Let the discussions begin!
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
